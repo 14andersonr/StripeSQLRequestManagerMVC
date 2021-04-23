@@ -41,7 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateRangeCreate.cs" />
+    <Compile Include="DateRangeDetail.cs" />
+    <Compile Include="DateRangeEdit.cs" />
+    <Compile Include="DateRangeListItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuestionCreate.cs" />
+    <Compile Include="QuestionDetail.cs" />
+    <Compile Include="QuestionEdit.cs" />
+    <Compile Include="QuestionListItem.cs" />
+    <Compile Include="SQLCodeCreate.cs" />
+    <Compile Include="SQLCodeDetail.cs" />
+    <Compile Include="SQLCodeEdit.cs" />
+    <Compile Include="SQLCodeListItem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

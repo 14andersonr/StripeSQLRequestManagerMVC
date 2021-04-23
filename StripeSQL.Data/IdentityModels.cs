@@ -29,5 +29,11 @@ namespace StripeSQLRequestManager.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<StripeSQL.Data.Question> Questions { get; set; }
+
+        public System.Data.Entity.DbSet<StripeSQL.Data.DateRange> DateRanges { get; set; }
+
+        public System.Data.Entity.DbSet<StripeSQL.Data.SQLCode> SQLCodes { get; set; }
     }
 }
