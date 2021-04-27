@@ -27,8 +27,7 @@ namespace StripeSQL.Data
         [Required]
         public string SQL { get; set; }
 
-        [Required]
-        public DateTime ResolvedDate { get; set; }
+        public DateTime? ResolvedDate { get; set; }
 
         [Required]
         public bool Resolved { get; set; }

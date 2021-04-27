@@ -28,7 +28,13 @@ namespace StripeSQL.Data
         public DateTime EndDate { get; set; }
 
         [Required]
-        public DateRange Range { get; set; } //Needs a method.
+        public TimeSpan Range { 
+            get 
+            {
+                var actualRange = EndDate - StartDate;
+                return actualRange;
+            } 
+        }
 
         [Required]
         public DateTimeOffset CreatedUtc { get; set; }
