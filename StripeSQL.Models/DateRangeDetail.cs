@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StripeSQL.Models
 {
-    class DateRangeDetail
+    public class DateRangeDetail
     {
         [Key]
         public int DateRangeId { get; set; }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StripeSQL.Models
 {
-    class QuestionEdit
+    public class QuestionEdit
     {
         [Key]
         public int QuestionId { get; set; }

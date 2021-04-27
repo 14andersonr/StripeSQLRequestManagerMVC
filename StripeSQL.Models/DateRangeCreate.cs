@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StripeSQL.Models
 {
-    class DateRangeCreate
+    public class DateRangeCreate
     {
         [Required]
         public DateTime StartDate { get; set; }

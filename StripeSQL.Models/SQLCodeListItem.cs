@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StripeSQL.Models
 {
-    class SQLCodeListItem
+    public class SQLCodeListItem
     {
         [Key]
         public int SQLCodeId { get; set; }
