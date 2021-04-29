@@ -22,7 +22,7 @@ namespace StripeSQL.Data
         public virtual DateRange DateRange { get; set; }
 
         [Required]
-        public Guid OwnerId { get; set; }
+        public Guid OwnerId { get; set;}
 
         [Required]
         public string SQL { get; set; }
