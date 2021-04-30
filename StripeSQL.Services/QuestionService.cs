@@ -10,7 +10,7 @@ using StripeSQLRequestManager.Models;
 
 namespace StripeSQL.Services
 {
-    class QuestionService
+    public class QuestionService
     {
         private readonly Guid _userId;
 

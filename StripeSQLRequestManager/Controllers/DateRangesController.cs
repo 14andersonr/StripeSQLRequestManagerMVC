@@ -6,128 +6,134 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using StripeSQL.Data;
+using StripeSQL.Models;
+using StripeSQL.Services;
 using StripeSQLRequestManager.Models;
 
 namespace StripeSQLRequestManager.Controllers
 {
+    [Authorize]
     public class DateRangesController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-        // GET: DateRanges
+        // GET: DateRange
         public ActionResult Index()
         {
-            var dateRanges = db.DateRanges.Include(d => d.Question);
-            return View(dateRanges.ToList());
+            var userId = Guid.Parse(User.Identity.GetUserId());
+            var service = new DateRangeService(userId);
+            var model = service.GetDateRange();
+
+            return View(model);
         }
 
-        // GET: DateRanges/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            DateRange dateRange = db.DateRanges.Find(id);
-            if (dateRange == null)
-            {
-                return HttpNotFound();
-            }
-            return View(dateRange);
-        }
-
-        // GET: DateRanges/Create
+        //GET: DateRange/Create
         public ActionResult Create()
         {
-            ViewBag.QuestionId = new SelectList(db.Questions, "QuestionId", "Content");
             return View();
         }
 
-        // POST: DateRanges/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
+        //POST: DateRange/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DateRangeId,QuestionId,OwnerId,StartDate,EndDate,CreatedUtc,ModifiedUtc")] DateRange dateRange)
+        public ActionResult Create(DateRangeCreate model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+
+            var service = CreateDateRangeService();
+
+            if (service.CreateDateRange(model))
             {
-                db.DateRanges.Add(dateRange);
-                db.SaveChanges();
+                TempData["SaveResult"] = "Your Date Range was created.";
+                return RedirectToAction("Index");
+            };
+
+            ModelState.AddModelError("", "Date Range could not be created.");
+
+            return View(model);
+        }
+
+        //GET: DateRange/Details/{id}
+        public ActionResult Details(int id)
+        {
+            var svc = CreateDateRangeService();
+            var model = svc.GetDateRangeById(id);
+
+            return View(model);
+        }
+
+        //GET: DateRange/Edit/{id}
+        public ActionResult Edit(int id)
+        {
+            var service = CreateDateRangeService();
+            var detail = service.GetDateRangeById(id);
+            var model =
+                new DateRangeEdit
+                {
+                    DateRangeId = detail.DateRangeId,
+                    StartDate = detail.StartDate,
+                    EndDate = detail.EndDate,
+                };
+            return View(model);
+        }
+
+        //POST: DateRange/Edit/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, DateRangeEdit model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            if (model.DateRangeId != id)
+            {
+                ModelState.AddModelError("", "Id Mismatch");
+                return View(model);
+            }
+
+            var service = CreateDateRangeService();
+
+            if (service.UpdateDateRange(model))
+            {
+                TempData["SaveResult"] = "Your Date Range was updated.";
                 return RedirectToAction("Index");
             }
 
-            ViewBag.QuestionId = new SelectList(db.Questions, "QuestionId", "Content", dateRange.QuestionId);
-            return View(dateRange);
+            ModelState.AddModelError("", "Your Date Range could not be updated.");
+            return View(model);
         }
 
-        // GET: DateRanges/Edit/5
-        public ActionResult Edit(int? id)
+        //GET: DateRange/Delete/{id}
+        [ActionName("Delete")]
+        public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            DateRange dateRange = db.DateRanges.Find(id);
-            if (dateRange == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.QuestionId = new SelectList(db.Questions, "QuestionId", "Content", dateRange.QuestionId);
-            return View(dateRange);
+            var svc = CreateDateRangeService();
+            var model = svc.GetDateRangeById(id);
+
+            return View(model);
         }
 
-        // POST: DateRanges/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //POST: DateRange/Delete/{id}
         [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "DateRangeId,QuestionId,OwnerId,StartDate,EndDate,CreatedUtc,ModifiedUtc")] DateRange dateRange)
+        public ActionResult DeletePost(int id)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(dateRange).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.QuestionId = new SelectList(db.Questions, "QuestionId", "Content", dateRange.QuestionId);
-            return View(dateRange);
-        }
+            var service = CreateDateRangeService();
 
-        // GET: DateRanges/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            DateRange dateRange = db.DateRanges.Find(id);
-            if (dateRange == null)
-            {
-                return HttpNotFound();
-            }
-            return View(dateRange);
-        }
+            service.DeleteDateRange(id);
 
-        // POST: DateRanges/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            DateRange dateRange = db.DateRanges.Find(id);
-            db.DateRanges.Remove(dateRange);
-            db.SaveChanges();
+            TempData["SaveResult"] = "Your Date Range was deleted";
+
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+        //Helper Method
+        private DateRangeService CreateDateRangeService()
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            var userId = Guid.Parse(User.Identity.GetUserId());
+            var service = new DateRangeService(userId);
+            return service;
         }
     }
 }
