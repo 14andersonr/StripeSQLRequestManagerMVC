@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StripeSQL.Data.SQLCode>
+﻿@model IEnumerable<StripeSQL.Models.SQLCodeListItem>
 
 @{
     ViewBag.Title = "Index";
@@ -12,15 +12,6 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.DateRange.DateRangeId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Question.Content)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OwnerId)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.SQL)
         </th>
         <th>
@@ -32,23 +23,11 @@
         <th>
             @Html.DisplayNameFor(model => model.CreatedUtc)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ModifiedUtc)
-        </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateRange.DateRangeId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Question.Content)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OwnerId)
-        </td>
         <td>
             @Html.DisplayFor(modelItem => item.SQL)
         </td>
@@ -60,9 +39,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.CreatedUtc)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ModifiedUtc)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.SQLCodeId }) |

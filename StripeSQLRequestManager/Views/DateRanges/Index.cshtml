@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StripeSQL.Data.DateRange>
+﻿@model IEnumerable<StripeSQL.Models.DateRangeListItem>
 
 @{
     ViewBag.Title = "Index";
@@ -12,22 +12,16 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Question.Content)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OwnerId)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.StartDate)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.EndDate)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CreatedUtc)
+            @Html.DisplayNameFor(model => model.Range)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ModifiedUtc)
+            @Html.DisplayNameFor(model => model.CreatedUtc)
         </th>
         <th></th>
     </tr>
@@ -35,22 +29,16 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Question.Content)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OwnerId)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.StartDate)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.EndDate)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.CreatedUtc)
+            @Html.DisplayFor(modelItem => item.Range)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ModifiedUtc)
+            @Html.DisplayFor(modelItem => item.CreatedUtc)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.DateRangeId }) |

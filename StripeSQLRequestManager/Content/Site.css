@@ -28,6 +28,18 @@ body {
     color: #8A8A8A;
 }
 
+th {
+    color:white;
+}
+
+td {
+    color: white;
+}
+
+.jumbotron {
+    background:#001e26  url(images/img01.jpg) repeat-x left top;
+}
+
 h1, h2, h3 {
     margin: 0;
     text-transform: uppercase;
@@ -59,7 +71,7 @@ blockquote {
 }
 
 a {
-    color: #ff8b00;
+    color: #ff8b00 !important;
 }
 
     a:hover {

@@ -1,4 +1,4 @@
-﻿@model StripeSQL.Data.DateRange
+﻿@model StripeSQL.Models.DateRangeDetail
 
 @{
     ViewBag.Title = "Details";
@@ -7,25 +7,9 @@
 <h2>Details</h2>
 
 <div>
-    <h4>DateRange</h4>
+    <h4>DateRangeDetail</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Question.Content)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Question.Content)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.OwnerId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.OwnerId)
-        </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.StartDate)
         </dt>
@@ -40,6 +24,14 @@
 
         <dd>
             @Html.DisplayFor(model => model.EndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Range)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Range)
         </dd>
 
         <dt>
