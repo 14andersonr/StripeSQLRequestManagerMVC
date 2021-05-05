@@ -6,132 +6,136 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using StripeSQL.Data;
+using StripeSQL.Models;
+using StripeSQL.Services;
 using StripeSQLRequestManager.Models;
 
 namespace StripeSQLRequestManager.Controllers
 {
+    [Authorize]
     public class SQLCodesController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-        // GET: SQLCodes
+        // GET: SQLCode
         public ActionResult Index()
         {
-            var sQLCodes = db.SQLCodes.Include(s => s.DateRange).Include(s => s.Question);
-            return View(sQLCodes.ToList());
+            var userId = Guid.Parse(User.Identity.GetUserId());
+            var service = new SQLCodeService(userId);
+            var model = service.GetSQLCodes();
+
+            return View(model);
         }
 
-        // GET: SQLCodes/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SQLCode sQLCode = db.SQLCodes.Find(id);
-            if (sQLCode == null)
-            {
-                return HttpNotFound();
-            }
-            return View(sQLCode);
-        }
-
-        // GET: SQLCodes/Create
+        //GET: SQLCode/Create
         public ActionResult Create()
         {
-            ViewBag.DateRangeId = new SelectList(db.DateRanges, "DateRangeId", "DateRangeId");
-            ViewBag.QuestionId = new SelectList(db.Questions, "QuestionId", "Content");
             return View();
         }
 
-        // POST: SQLCodes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
+        //POST: SQLCode/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SQLCodeId,QuestionId,DateRangeId,OwnerId,SQL,ResolvedDate,Resolved,CreatedUtc,ModifiedUtc")] SQLCode sQLCode)
+        public ActionResult Create(SQLCodeCreate model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+
+            var service = CreateSQLCodeService();
+
+            if (service.CreateSQLCode(model))
             {
-                db.SQLCodes.Add(sQLCode);
-                db.SaveChanges();
+                TempData["SaveResult"] = "Your SQL Code was created.";
+                return RedirectToAction("Index");
+            };
+
+            ModelState.AddModelError("", "SQL Code could not be created.");
+
+            return View(model);
+        }
+
+        //GET: SQLCode/Details/{id}
+        public ActionResult Details(int id)
+        {
+            var svc = CreateSQLCodeService();
+            var model = svc.GetSQLCodeById(id);
+
+            return View(model);
+        }
+
+        //GET: SQLCode/Edit/{id}
+        public ActionResult Edit(int id)
+        {
+            var service = CreateSQLCodeService();
+            var detail = service.GetSQLCodeById(id);
+            var model =
+                new SQLCodeEdit
+                {
+                    SQLCodeId = detail.SQLCodeId,
+                    SQL = detail.SQL,
+                    ResolvedDate = detail.ResolvedDate,
+                    Resolved = detail.Resolved
+
+                };
+            return View(model);
+        }
+
+        //POST: SQLCode/Edit/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, SQLCodeEdit model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            if (model.SQLCodeId != id)
+            {
+                ModelState.AddModelError("", "Id Mismatch");
+                return View(model);
+            }
+
+            var service = CreateSQLCodeService();
+
+            if (service.UpdateSQLCode(model))
+            {
+                TempData["SaveResult"] = "Your SQL Code was updated.";
                 return RedirectToAction("Index");
             }
 
-            ViewBag.DateRangeId = new SelectList(db.DateRanges, "DateRangeId", "DateRangeId", sQLCode.DateRangeId);
-            ViewBag.QuestionId = new SelectList(db.Questions, "QuestionId", "Content", sQLCode.QuestionId);
-            return View(sQLCode);
+            ModelState.AddModelError("", "Your SQL Code could not be updated.");
+            return View(model);
         }
 
-        // GET: SQLCodes/Edit/5
-        public ActionResult Edit(int? id)
+        //GET: SQLCode/Delete/{id}
+        [ActionName("Delete")]
+        public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SQLCode sQLCode = db.SQLCodes.Find(id);
-            if (sQLCode == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.DateRangeId = new SelectList(db.DateRanges, "DateRangeId", "DateRangeId", sQLCode.DateRangeId);
-            ViewBag.QuestionId = new SelectList(db.Questions, "QuestionId", "Content", sQLCode.QuestionId);
-            return View(sQLCode);
+            var svc = CreateSQLCodeService();
+            var model = svc.GetSQLCodeById(id);
+
+            return View(model);
         }
 
-        // POST: SQLCodes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //POST: SQLCode/Delete/{id}
         [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SQLCodeId,QuestionId,DateRangeId,OwnerId,SQL,ResolvedDate,Resolved,CreatedUtc,ModifiedUtc")] SQLCode sQLCode)
+        public ActionResult DeletePost(int id)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(sQLCode).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.DateRangeId = new SelectList(db.DateRanges, "DateRangeId", "DateRangeId", sQLCode.DateRangeId);
-            ViewBag.QuestionId = new SelectList(db.Questions, "QuestionId", "Content", sQLCode.QuestionId);
-            return View(sQLCode);
-        }
+            var service = CreateSQLCodeService();
 
-        // GET: SQLCodes/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SQLCode sQLCode = db.SQLCodes.Find(id);
-            if (sQLCode == null)
-            {
-                return HttpNotFound();
-            }
-            return View(sQLCode);
-        }
+            service.DeleteSQLCode(id);
 
-        // POST: SQLCodes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            SQLCode sQLCode = db.SQLCodes.Find(id);
-            db.SQLCodes.Remove(sQLCode);
-            db.SaveChanges();
+            TempData["SaveResult"] = "Your SQL Code was deleted";
+
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+        //Helper Method
+        private SQLCodeService CreateSQLCodeService()
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            var userId = Guid.Parse(User.Identity.GetUserId());
+            var service = new SQLCodeService(userId);
+            return service;
         }
     }
 }

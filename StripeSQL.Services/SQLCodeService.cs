@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace StripeSQL.Services
 {
-    class SQLCodeService
+    public class SQLCodeService
     {
         private readonly Guid _userId;
 

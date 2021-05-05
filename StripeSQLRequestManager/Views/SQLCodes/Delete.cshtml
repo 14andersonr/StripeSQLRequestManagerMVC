@@ -1,4 +1,4 @@
-﻿@model StripeSQL.Data.SQLCode
+﻿@model StripeSQL.Models.SQLCodeDetail
 
 @{
     ViewBag.Title = "Delete";
@@ -8,33 +8,9 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>SQLCode</h4>
+    <h4>SQLCodeDetail</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.DateRange.DateRangeId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DateRange.DateRangeId)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Question.Content)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Question.Content)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.OwnerId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.OwnerId)
-        </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.SQL)
         </dt>
