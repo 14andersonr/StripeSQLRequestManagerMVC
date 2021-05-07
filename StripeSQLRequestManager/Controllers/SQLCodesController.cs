@@ -30,6 +30,14 @@ namespace StripeSQLRequestManager.Controllers
         //GET: SQLCode/Create
         public ActionResult Create()
         {
+
+            var service = CreateSQLCodeService();
+            //Assigning generic list to ViewBag
+            ViewBag.Questions = service.QuestionsForSQLCode();
+
+            //Assigning generic list to ViewBag
+            ViewBag.DateRanges = service.DateRangeForSQLCode();
+
             return View();
         }
 

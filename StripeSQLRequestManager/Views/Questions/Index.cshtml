@@ -17,23 +17,44 @@
         <th>
             @Html.DisplayNameFor(model => model.CreatedUtc)
         </th>
+        <th>
+            DATE RANGE
+        </th>
+        <th>
+            SQL CODE
+        </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Content)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedUtc)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.QuestionId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.QuestionId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.QuestionId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Content)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.CreatedUtc)
+    </td>
+    <td>
+        @foreach (var question in item.DateRanges)
+        {
+            @Html.DisplayFor(modelItem => question.StartDate)
+    <br/>
+            @Html.DisplayFor(modelItem => question.EndDate)
+        }
+    </td>
+    <td>
+        @foreach (var question in item.SQL)
+        {
+            @Html.DisplayFor(modelItem => question.SQL)
+        }
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.QuestionId }) |
+        @Html.ActionLink("Details", "Details", new { id = item.QuestionId }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.QuestionId })
+    </td>
+</tr>
+    }
 
 </table>
