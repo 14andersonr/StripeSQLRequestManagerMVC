@@ -30,6 +30,19 @@ namespace StripeSQLRequestManager.Controllers
         //GET: DateRange/Create
         public ActionResult Create()
         {
+            //Creating generic list
+            //List<SelectListItem> QuestionList = new List<SelectListItem>()
+            //{
+            //    new SelectListItem { Text = "Latur", Value = "1" },
+            //    new SelectListItem { Text = "Pune", Value = "2" },
+            //    new SelectListItem { Text = "Mumbai", Value = "3" },
+            //    new SelectListItem { Text = "Delhi", Value = "4" },
+
+            //};
+            var service = CreateDateRangeService();
+            //Assigning generic list to ViewBag
+            ViewBag.Questions = service.QuestionsForDateRange();
+
             return View();
         }
 

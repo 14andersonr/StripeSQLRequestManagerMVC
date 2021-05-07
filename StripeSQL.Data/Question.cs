@@ -19,6 +19,10 @@ namespace StripeSQL.Data
         [Required]
         public string Content { get; set; }
 
+        public virtual ICollection<SQLCode> SQLCollection { get; set; }
+
+        public virtual ICollection<DateRange> DateRange { get; set; }
+
         [Required]
         public DateTimeOffset CreatedUtc { get; set; }
 

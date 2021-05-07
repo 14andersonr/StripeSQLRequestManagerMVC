@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace StripeSQL.Services
 {
@@ -111,6 +112,46 @@ namespace StripeSQL.Services
 
                 return ctx.SaveChanges() == 1;
             }
+        }
+
+        public List<SelectListItem> QuestionsForSQLCode()
+        {
+            //Look at Questions Database
+            QuestionService questionService = new QuestionService(_userId);
+
+            var questionEnumerable = questionService.GetQuestions();
+
+            //Package as SelectListItems
+
+            List<SelectListItem> QuestionList = new List<SelectListItem>();
+
+            foreach (var item in questionEnumerable)
+            {
+                QuestionList.Add(new SelectListItem { Text = item.Content, Value = item.QuestionId.ToString() });
+                //new SelectListItem { Text = item.Content, Value = item.QuestionId.ToString()};
+            }
+
+            return QuestionList;
+        }
+
+        public List<SelectListItem> DateRangeForSQLCode()
+        {
+            //Look at DateRange Database
+            DateRangeService dateRangeService = new DateRangeService(_userId);
+
+            var dateRangeEnumerable = dateRangeService.GetDateRange();
+
+            //Package as SelectListItems
+
+            List<SelectListItem> DateRangeList = new List<SelectListItem>();
+
+            foreach (var item in dateRangeEnumerable)
+            {
+                DateRangeList.Add(new SelectListItem { Text = $"{item.StartDate} to {item.EndDate}", Value = item.DateRangeId.ToString() });
+                //new SelectListItem { Text = item.Content, Value = item.QuestionId.ToString()};
+            }
+
+            return DateRangeList;
         }
     }
 }

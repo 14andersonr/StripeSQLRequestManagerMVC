@@ -18,7 +18,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.QuestionId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.QuestionId, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.EditorFor(model => model.QuestionId, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.DropDownListFor(model => model.QuestionId, ViewBag.Questions as IEnumerable<SelectListItem>)
                 @Html.ValidationMessageFor(model => model.QuestionId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -26,7 +27,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DateRangeId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DateRangeId, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.EditorFor(model => model.DateRangeId, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.DropDownListFor(model => model.DateRangeId, ViewBag.DateRanges as IEnumerable<SelectListItem>)
                 @Html.ValidationMessageFor(model => model.DateRangeId, "", new { @class = "text-danger" })
             </div>
         </div>

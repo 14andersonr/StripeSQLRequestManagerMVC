@@ -41,14 +41,23 @@ namespace StripeSQL.Services
                 var query =
                     ctx
                         .Questions
-                        .Where(e => e.OwnerId == _userId)
+                        .Where(e => e.OwnerId == _userId).ToList()
                         .Select(
                             e =>
                                 new QuestionListItem
                                 {
                                     QuestionId = e.QuestionId,
                                     Content = e.Content,
-                                    CreatedUtc = e.CreatedUtc
+                                    CreatedUtc = e.CreatedUtc,
+                                    SQL = e.SQLCollection.Select(r => new SQLCodeListItem
+                                    {
+                                        SQL = r.SQL
+                                    }).ToList(),
+                                    DateRanges = e.DateRange.Select(r => new DateRangeListItem
+                                    {
+                                        StartDate = r.StartDate,
+                                        EndDate = r.EndDate
+                                    }).ToList(),
                                 }
                         );
 
